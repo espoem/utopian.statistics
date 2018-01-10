@@ -12,13 +12,15 @@
 
 <!-- Chart code -->
 <script>
-    $(function() {
+    $(function () {
         $.ajax({
             url: "https://utopian.plus/whoHasPendingPosts.json",
-            success: function(result) {
+            success: function (result) {
                 console.log(result);
-                for (i = 0; i <result.length;i++) {
-                    $('table').append('<tr><td>'+result[i].account+'</td><td>'+result[i].count+'</td></tr>')
+                for (i = 0; i < result.length; i++) {
+                    if (result[i].count > 0) {
+                        $('table').append('<tr><td>' + result[i].account + '</td><td>' + result[i].count + '</td></tr>')
+                    }
                 }
             }
         })
