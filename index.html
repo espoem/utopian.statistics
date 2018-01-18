@@ -18,7 +18,7 @@
 <script>
     $(function() {
         $.ajax({
-            url: "https://utopian.plus/pendingPosts.json",
+            url: "https://utopian.plus/unreviewedPosts.json",
             success: function(result) {
                 var data = [];
                 var categories = result.posts.pending.categories;
