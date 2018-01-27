@@ -1,12 +1,95 @@
-<!-- Styles -->
-<style>
-    #chartdiv {
-        width: 100%;
-        height: 650px;
-    }
-</style>
+<!doctype html>
+<html>
 
-<!-- Resources -->
+<head>
+    <title>Utopian.info</title>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
+    <script src="https://wehmoen.top/chartjs-plugin-streaming/dist/chartjs-plugin-streaming.js"></script>
+    <style>
+        canvas {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+    </style>
+    <style>
+        #chartdiv {
+            width: 100%;
+            height: 650px;
+        }
+    </style>
+</head>
+
+<body>
+<center><h1>Unreviewed Contributions</h1></center>
+<div style="width:50%;display:inline-block;float:left;">
+    <canvas id="canvas"></canvas>
+</div>
+<div style="width:50%;display: inline;float:left">
+    <div id="chartdiv"></div>
+</div>
+<div style="width: 100%;">
+    <table style="width: 50%;margin: auto" border="1">
+        <tr>
+            <td>Development</td>
+            <td id="dev" style="text-align: right">0</td>
+        </tr>
+        <tr>
+            <td>Bug Hunting</td>
+            <td id="bug" style="text-align: right">0</td>
+        </tr>
+        <tr>
+            <td>Documentation</td>
+            <td id="doc" style="text-align: right">0</td>
+        </tr>
+        <tr>
+            <td>Translation</td>
+            <td id="tra" style="text-align: right">0</td>
+        </tr>
+        <tr>
+            <td>Analysis</td>
+            <td id="ana" style="text-align: right">0</td>
+        </tr>
+        <tr>
+            <td>Suggestion</td>
+            <td id="sug" style="text-align: right">0</td>
+        </tr>
+        <tr>
+            <td>Graphics</td>
+            <td id="gra" style="text-align: right">0</td>
+        </tr>
+        <tr>
+            <td>Tutorials</td>
+            <td id="tut" style="text-align: right">0</td>
+        </tr>
+        <tr>
+            <td>Video Tutorials</td>
+            <td id="vid" style="text-align: right">0</td>
+        </tr>
+        <tr>
+            <td>Blog</td>
+            <td id="blo" style="text-align: right">0</td>
+        </tr>
+        <tr>
+            <td>Task Requests</td>
+            <td id="tas" style="text-align: right">0</td>
+        </tr>
+        <tr>
+            <td>Visibility</td>
+            <td id="vis" style="text-align: right">0</td>
+        </tr>
+        <tr>
+            <td>Copywriting</td>
+            <td id="cop" style="text-align: right">0</td>
+        </tr>
+        <tr>
+            <td><b>Total</b></td>
+            <td id="total" style="text-align: right">0</td>
+        </tr>
+    </table>
+</div>
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
 <script src="https://www.amcharts.com/lib/3/pie.js"></script>
@@ -16,47 +99,300 @@
 
 <!-- Chart code -->
 <script>
-    $(function() {
-        $.ajax({
-            url: "https://utopian.plus/unreviewedPosts.json",
-            success: function(result) {
-                var data = [];
-                var categories = result.posts.pending.categories;
-                data.push({"category":"Development","posts":categories.development})
-                data.push({"category":"Bug Hunting","posts":categories.bug_hunting})
-                data.push({"category":"Documentation","posts":categories.documentation})
-                data.push({"category":"Translations","posts":categories.translations})
-                data.push({"category":"Analysis","posts":categories.analysis})
-                data.push({"category":"Suggestions","posts":categories.ideas})
-                data.push({"category":"Graphics","posts":categories.graphics})
-                data.push({"category":"Tutorials","posts":categories.tutorials})
-                data.push({"category":"Video Tutorials","posts":categories.video_tutorials})
-                data.push({"category":"Blog","posts":categories.blog})
-                data.push({"category":"Sub Projects","posts":categories.sub_projects})
-                data.push({"category":"Task Requests","posts":categories.tasks})
-                data.push({"category":"Visibility","posts":categories.visibility})
-                data.push({"category":"Copywriting","posts":categories.copywriting})
-                var chart = AmCharts.makeChart( "chartdiv", {
-                    "type": "pie",
-                    "theme": "light",
-                    "dataProvider": data,
-                    "valueField": "posts",
-                    "titleField": "category",
-                    "balloon":{
-                        "fixedPosition":true
-                    },
-                    "export": {
-                        "enabled": false
-                    }
-                } );
-                $('a').remove();
+  $(function() {
+    function pieChart() {
+      $.ajax({
+        url: "https://utopian.plus/unreviewedPosts.json",
+        success: function(result) {
+          var data = [];
+          var categories = result.posts.pending.categories;
+          data.push({"category":"Development","posts":categories.development})
+          $('#dev').text(categories.development);
+          data.push({"category":"Bug Hunting","posts":categories.bug_hunting})
+          $('#bug').text(categories.bug_hunting);
+          data.push({"category":"Documentation","posts":categories.documentation})
+          $('#doc').text(categories.documentation);
+          data.push({"category":"Translations","posts":categories.translations})
+          $('#tra').text(categories.translations);
+          data.push({"category":"Analysis","posts":categories.analysis})
+          $('#ana').text(categories.analysis);
+          data.push({"category":"Suggestions","posts":categories.ideas})
+          $('#sug').text(categories.ideas);
+          data.push({"category":"Graphics","posts":categories.graphics})
+          $('#gra').text(categories.graphics);
+          data.push({"category":"Tutorials","posts":categories.tutorials})
+          $('#tut').text(categories.tutorials);
+          data.push({"category":"Video Tutorials","posts":categories.video_tutorials})
+          $('#vid').text(categories.video_tutorials);
+          data.push({"category":"Blog","posts":categories.blog})
+          $('#blo').text(categories.blog);
+          // data.push({"category":"Sub Projects","posts":categories.sub_projects})
+          data.push({"category":"Task Requests","posts":categories.tasks})
+          $('#tas').text(categories.tasks);
+          data.push({"category":"Visibility","posts":categories.visibility})
+          $('#vis').text(categories.visibility);
+          data.push({"category":"Copywriting","posts":categories.copywriting})
+          $('#cop').text(categories.copywriting);
+          $('#total').text(result.posts.pending._total)
+          var chart = AmCharts.makeChart( "chartdiv", {
+            "type": "pie",
+            "theme": "light",
+            "dataProvider": data,
+            "startDuration":0,
+            "valueField": "posts",
+            "titleField": "category",
+            "balloon":{
+              "fixedPosition":true
+            },
+            "export": {
+              "enabled": false
             }
-        })
-    })
+          });
+          pieChart();
+        }
+      })
+    }
+    pieChart();
+  })
 
 </script>
+<script>
+  var chartColors = {
+    suggestions: '#54d2a0',
+    development: '#000000',
+    bug_hunting: '#d9534f',
+    translations: '#ffce3d',
+    graphics:'#f6a623',
+    analysis: '#164265',
+    visibility: '#7ec2f3',
+    documentation: '#b1b1b1',
+    tutorials: '#782c51',
+    video_tutorials: '#ec3324',
+    copywriting: '#008080',
+    blog: '#0275d8',
+    task: '#324314'
+  };
 
-<center><h1>Utopian unreviewed contributions</h1></center>
 
-<!-- HTML -->
-<div id="chartdiv"></div>
+  function onRefresh() {
+    $.ajax({
+      url: "https://utopian.plus/unreviewedPosts.json",
+      success: function (res) {
+        config.data.datasets[0].data.push({
+          x: moment(),
+          y: res.posts.pending.categories.development
+        });
+        config.data.datasets[1].data.push({
+          x: moment(),
+          y: res.posts.pending.categories.bug_hunting
+        });
+        config.data.datasets[2].data.push({
+          x: moment(),
+          y: res.posts.pending.categories.documentation
+        });
+        config.data.datasets[3].data.push({
+          x: moment(),
+          y: res.posts.pending.categories.translations
+        });
+        config.data.datasets[4].data.push({
+          x: moment(),
+          y: res.posts.pending.categories.analysis
+        });
+        config.data.datasets[5].data.push({
+          x: moment(),
+          y: res.posts.pending.categories.ideas
+        });
+        config.data.datasets[6].data.push({
+          x: moment(),
+          y: res.posts.pending.categories.graphics
+        });
+        config.data.datasets[7].data.push({
+          x: moment(),
+          y: res.posts.pending.categories.tutorials
+        });
+        config.data.datasets[8].data.push({
+          x: moment(),
+          y: res.posts.pending.categories.video_tutorials
+        });
+        config.data.datasets[9].data.push({
+          x: moment(),
+          y: res.posts.pending.categories.blog
+        });
+        config.data.datasets[10].data.push({
+          x: moment(),
+          y: res.posts.pending.categories.tasks
+        });
+        config.data.datasets[11].data.push({
+          x: moment(),
+          y: res.posts.pending.categories.visibility
+        });
+        config.data.datasets[12].data.push({
+          x: moment(),
+          y: res.posts.pending.categories.copywriting
+        });
+        onRefresh();
+      }
+    })
+
+  }
+
+  onRefresh();
+
+  var color = Chart.helpers.color;
+  var config = {
+    type: 'line',
+    data: {
+      datasets: [
+        {
+          label: 'Development',
+          backgroundColor: color(chartColors.development).alpha(0.5).rgbString(),
+          borderColor: chartColors.development,
+          fill: false,
+          cubicInterpolationMode: 'monotone',
+          data: []
+        },
+        {
+          label: 'Bug Hunting',
+          backgroundColor: color(chartColors.bug_hunting).alpha(0.5).rgbString(),
+          borderColor: chartColors.bug_hunting,
+          fill: false,
+          data: []
+        },
+        {
+          label: 'Documentation',
+          backgroundColor: color(chartColors.documentation).alpha(0.5).rgbString(),
+          borderColor: chartColors.documentation,
+          fill: false,
+          cubicInterpolationMode: 'monotone',
+          data: []
+        },
+        {
+          label: 'Translations',
+          backgroundColor: color(chartColors.translations).alpha(0.5).rgbString(),
+          borderColor: chartColors.translations,
+          fill: false,
+          cubicInterpolationMode: 'monotone',
+          data: []
+        },
+        {
+          label: 'Analysis',
+          backgroundColor: color(chartColors.analysis).alpha(0.5).rgbString(),
+          borderColor: chartColors.analysis,
+          fill: false,
+          cubicInterpolationMode: 'monotone',
+          data: []
+        },
+        {
+          label: 'Suggestions',
+          backgroundColor: color(chartColors.suggestions).alpha(0.5).rgbString(),
+          borderColor: chartColors.suggestions,
+          fill: false,
+          cubicInterpolationMode: 'monotone',
+          data: []
+        },
+        {
+          label: 'Graphics',
+          backgroundColor: color(chartColors.graphics).alpha(0.5).rgbString(),
+          borderColor: chartColors.graphics,
+          fill: false,
+          cubicInterpolationMode: 'monotone',
+          data: []
+        },
+        {
+          label: 'Tutorials',
+          backgroundColor: color(chartColors.tutorials).alpha(0.5).rgbString(),
+          borderColor: chartColors.tutorials,
+          fill: false,
+          cubicInterpolationMode: 'monotone',
+          data: []
+        },
+        {
+          label: 'Video Tutorials',
+          backgroundColor: color(chartColors.video_tutorials).alpha(0.5).rgbString(),
+          borderColor: chartColors.video_tutorials,
+          fill: false,
+          cubicInterpolationMode: 'monotone',
+          data: []
+        },
+        {
+          label: 'Blog',
+          backgroundColor: color(chartColors.blog).alpha(0.5).rgbString(),
+          borderColor: chartColors.blog,
+          fill: false,
+          cubicInterpolationMode: 'monotone',
+          data: []
+        },
+        {
+          label: 'Task Requests',
+          backgroundColor: color(chartColors.task).alpha(0.5).rgbString(),
+          borderColor: chartColors.task,
+          fill: false,
+          cubicInterpolationMode: 'monotone',
+          data: []
+        },
+        {
+          label: 'Visibility',
+          backgroundColor: color(chartColors.visibility).alpha(0.5).rgbString(),
+          borderColor: chartColors.visibility,
+          fill: false,
+          cubicInterpolationMode: 'monotone',
+          data: []
+        },
+        {
+          label: 'Copywriting',
+          backgroundColor: color(chartColors.copywriting).alpha(0.5).rgbString(),
+          borderColor: chartColors.copywriting,
+          fill: false,
+          cubicInterpolationMode: 'monotone',
+          data: []
+        }
+
+      ]
+    },
+    options: {
+      responsive: true,
+      title: {
+        display: false,
+        text: ''
+      },
+      scales: {
+        xAxes: [{
+          type: 'realtime',
+          display: true,
+        }],
+        yAxes: [{
+          type: 'linear',
+          display: true,
+          scaleLabel: {
+            display: true,
+            labelString: 'Count'
+          }
+        }]
+      },
+      tooltips: {
+        intersect: false
+      },
+      hover: {
+        mode: 'nearest',
+        intersect: false
+      },
+      plugins: {
+        streaming: {
+          duration: 20000,
+          refresh: 5000,
+          delay: 0
+        }
+      }
+    }
+  };
+
+  window.onload = function () {
+    var ctx = document.getElementById('canvas').getContext('2d');
+    window.myLine = new Chart(ctx, config);
+  };
+
+
+</script>
+</body>
+
+</html>
